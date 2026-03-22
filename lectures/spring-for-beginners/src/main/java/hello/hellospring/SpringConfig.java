@@ -1,13 +1,20 @@
 package hello.hellospring;
 
+import hello.hellospring.repository.JdbcMemberRepository;
 import hello.hellospring.repository.MemberRepository;
-import hello.hellospring.repository.MemoryMemberRepository;
 import hello.hellospring.service.MemberService;
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration // 스프링이 뜰 때, 이렇게 `@Configuration` 어노테이션이 붙은 클래스에
 public class SpringConfig {
+
+    private final DataSource dataSource;
+
+    public SpringConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Bean // 이 `@Bean` 어노테이션이 있으면
     public MemberService memberService() {
@@ -16,6 +23,7 @@ public class SpringConfig {
 
     @Bean
     public MemberRepository memberRepository() {
-        return new MemoryMemberRepository();
+        // return new MemoryMemberRepository();
+        return new JdbcMemberRepository(dataSource);
     }
 }
