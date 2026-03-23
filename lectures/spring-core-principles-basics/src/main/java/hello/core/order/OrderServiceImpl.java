@@ -3,15 +3,21 @@ package hello.core.order;
 import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService {
 
-    // 추상화(MemberRepository)와 구체화(MemoryMemberRepository)에 모두 의존하고 있는 코드
-    // MemberRepository의 구현체를 변경하려면 요 코드를 수정해야 한다
-    // 즉 DIP, OCP 위반
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private DiscountPolicy discountPolicy;
+    // 인터페이스에만 의존. 구체적인 클래스에 대해서는 전혀 모름. DIP를 잘 지키고 있는 상태!
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+        // 이 생성자를 통해서 어떤 구현 객체가 들어올지(주입될지)는 알 수 없다
+        // OrderServiceImpl은 이제부터 실행에만 집중하면 된다
+
+        // 배우는 자신의 배역을 수행하는 데 집중해야 한다. 다른 배역에 누가 캐스팅될지 신경쓰는 건 배우의 관심사가 아니다!!
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {

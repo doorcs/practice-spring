@@ -2,7 +2,13 @@ package hello.core.member;
 
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    // 이렇게 하면 DIP를 지키는 것!
+    // 구체화(구현 클래스)에 대한 정보 없이, 추상화(인터페이스)에만 의존하고 있다
+    private final MemberRepository memberRepository;
+
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository; // 이런걸 생성자 주입 방식이라고 부른다
+    }
 
     @Override
     public void join(Member member) {
