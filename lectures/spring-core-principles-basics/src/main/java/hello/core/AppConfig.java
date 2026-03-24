@@ -11,7 +11,7 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration // 요 어노테이션이 있어야 `CGLIB` 기술을 활용할 수 있고, 싱글톤이 보장된다
 public class AppConfig {
 
     @Bean
