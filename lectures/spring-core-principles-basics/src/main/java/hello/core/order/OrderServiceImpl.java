@@ -1,9 +1,9 @@
 package hello.core.order;
 
+import hello.core.annotation.MainDiscountPolicy;
 import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,9 +15,9 @@ public class OrderServiceImpl implements OrderService {
 
     public OrderServiceImpl(
             MemberRepository memberRepository,
-            // `@Primary`랑 `@Qualifier`중에선 `@Qualifier`가 우선순위를 가진다
-            // 따라서 여기서는 `@Primary`인 `rateDiscountPolicy` 빈 대신 `fixDiscountPolicy` 빈이 주입된다
-            @Qualifier("fixDiscountPolicy") DiscountPolicy discountPolicy) {
+            // `@Qualifier("mainDiscountPolicy")` 처럼 사용하면 `문자열에서 오타`가 나는 경우를 잡을 수 없다 (main`Discout`Policy 처럼)
+            // 이때 `@Qualifier`를 감싸는 커스텀 어노테이션을 만들어서 사용하면 이런 문제를 해결할 수 있다!
+            @MainDiscountPolicy DiscountPolicy discountPolicy) {
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }
