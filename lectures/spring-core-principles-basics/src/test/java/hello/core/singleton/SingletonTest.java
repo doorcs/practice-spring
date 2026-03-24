@@ -30,4 +30,20 @@ class SingletonTest {
 
         // 해결방안: 객체가 `딱 하나`만 생성되고, 공유하도록 설계하면 된다 (싱글톤 패턴 적용)
     }
+
+    @Test
+    @DisplayName("싱글톤 패턴을 적용한 객체 사용")
+    void singletonServiceTest() {
+        // new SingletonService(); // 컴파일 오류!! -> private 생성자이기 때문에 외부에서 호출할 수 없다
+
+        SingletonService singletonService1 = SingletonService.getInstance();
+        SingletonService singletonService2 = SingletonService.getInstance();
+
+        System.out.println("singletonService1 = " + singletonService1);
+        System.out.println("singletonService2 = " + singletonService2);
+
+        assertThat(singletonService1).isSameAs(singletonService2);
+        // `same`은 `==`를 사용해서 비교한다 (참조값이 같은지, 즉 같은 객체인지 비교)
+        // `equal`은 `equals()` 메서드를 사용해서 비교한다 (내용물이 같은지 비교한다)
+    }
 }
