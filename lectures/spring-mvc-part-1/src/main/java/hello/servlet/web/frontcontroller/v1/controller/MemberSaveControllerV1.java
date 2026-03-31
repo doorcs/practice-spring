@@ -1,5 +1,6 @@
 package hello.servlet.web.frontcontroller.v1.controller;
 
+import hello.servlet.domain.member.Member;
 import hello.servlet.domain.member.MemberRepository;
 import hello.servlet.web.frontcontroller.v1.ControllerV1;
 import jakarta.servlet.RequestDispatcher;
@@ -17,7 +18,7 @@ public class MemberSaveControllerV1 implements ControllerV1 {
         String username = request.getParameter("username");
         int age = Integer.parseInt(request.getParameter("age"));
 
-        hello.servlet.domain.member.Member member = new hello.servlet.domain.member.Member(username, age);
+        Member member = new Member(username, age);
         memberRepository.save(member);
 
         // `Model`에 데이터를 보관하는 것
