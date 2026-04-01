@@ -1,11 +1,13 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -104,6 +106,37 @@ public class RequestParamController {
     public String requestParamMap(@RequestParam Map<String, Object> paramMap) {
 
         log.info("username={}, age={}", paramMap.get("username"), paramMap.get("age"));
+        return "ok";
+    }
+
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+
+        // `@ModelAttribute`의 기능:
+        // 1. 빈 객체 생성
+        // 2. HTTP 요청 파라미터의 이름으로 HelloData 객체의 프로퍼티를 찾음
+        // 3. 해당 프로퍼티의 setter 메서드를 호출해 값을 바인딩해줌
+
+        log.info("username = {}, age = {}", helloData.getUsername(), helloData.getAge());
+        return "ok";
+    }
+
+    /**
+     * `@RequestParam` 어노테이션과 마찬가지로 `@ModelAttribute` 어노테이션도 생략할 수 있다
+     *
+     * 둘 다 생략 가능한데, 스프링에서는 어떤 걸 기준으로 판단할까?
+     *
+     * `String`, `int`, `Integer` 등 단순 타입일 경우 `@RequestParam`의 생략이라고 판단한다
+     * 나머지(직접 만든 클래스)는 전부 `@ModelAttribute`의 생략이라고 판단한다 (여기서 사용된 HelloData처럼!)
+     *
+     * 뒤에서 다루겠지만, `ArgumentResolver`로 지정해둔 타입일 경우 `@ModelAttribute`의 생략이라고 판단하지 않는다!!!
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+
+        log.info("username = {}, age = {}", helloData.getUsername(), helloData.getAge());
         return "ok";
     }
 }
