@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/basic/items")
@@ -85,12 +86,24 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    @PostMapping("/add")
+    // @PostMapping("/add")
     public String addItemV5(@ModelAttribute Item item) {
 
         itemRepository.save(item);
 
         return "redirect:/basic/items" + item.getId();
+    }
+
+    @PostMapping("/add")
+    public String addItemV6(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
+
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        // 1. `{itemId} 처럼 `redirect URL`에 포함되는 속성은 `URL 인코딩`을 처리하고 치환해준다 (여기서는 {itemId}를 3으로 치환해줌)
+        // 2. `status` 처럼 `redirect URL`에 포함되지 않는 속성은 리다이렉트 시 `쿼리 파라미터`로 같이 넘겨준다 (여기서는 ?status=true)
+        return "redirect:/basic/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
