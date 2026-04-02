@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/basic/items")
@@ -38,9 +40,49 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
+    // @PostMapping("/add")
+    public String addItemV1(@RequestParam String itemName,
+                            @RequestParam int price,
+                            @RequestParam Integer quantity, // int, Integer 둘 다 가능 (null 핸들링 방식에서 차이가 있다)
+                            Model model) {
+
+        Item item = new Item();
+        item.setItemName(itemName);
+        item.setPrice(price);
+        item.setQuantity(quantity);
+
+        itemRepository.save(item);
+        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+
+    // @PostMapping("/add")
+    public String addItemV2(@ModelAttribute("item") Item item) {
+
+        itemRepository.save(item);
+        // model.addAttribute("item", item); `@ModelAttribute`에서 자동으로 `.addAttribute()`를 수행해주기 때문에 생략 가능!
+
+        return "basic/item";
+    }
+
     @PostMapping("/add")
-    public String save() {
-        return "xxx";
+    public String addItemV3(@ModelAttribute Item item) {
+
+        itemRepository.save(item);
+        // `@ModelAttribute`에 괄호로 속성 이름을 지정해주지 않으면, `클래스명의 첫 글자만 소문자로 변경`해서 등록해준다
+        // 여기서는 `Item` 클래스니까 `item` 으로 모델에 등록됨!
+
+        return "basic/item";
+    }
+
+    // @PostMapping("/add")
+    public String addItemV4(Item item) {
+
+        itemRepository.save(item);
+        // `@ModelAttribute` 어노테이션 자체를 생략할 수도 있지만, 권장하는 방식은 아님 (이렇게까지 생략하기보다는 명확하게 표현해주는게 낫다!)
+
+        return "basic/item";
     }
 
     // 테스트용 데이터 추가
