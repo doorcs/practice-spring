@@ -66,7 +66,7 @@ public class BasicItemController {
         return "basic/item";
     }
 
-    @PostMapping("/add")
+    // @PostMapping("/add")
     public String addItemV3(@ModelAttribute Item item) {
 
         itemRepository.save(item);
@@ -83,6 +83,14 @@ public class BasicItemController {
         // `@ModelAttribute` 어노테이션 자체를 생략할 수도 있지만, 권장하는 방식은 아님 (이렇게까지 생략하기보다는 명확하게 표현해주는게 낫다!)
 
         return "basic/item";
+    }
+
+    @PostMapping("/add")
+    public String addItemV5(@ModelAttribute Item item) {
+
+        itemRepository.save(item);
+
+        return "redirect:/basic/items" + item.getId();
     }
 
     @GetMapping("/{itemId}/edit")
