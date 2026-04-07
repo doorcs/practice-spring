@@ -1,10 +1,14 @@
 package hello.thymeleaf.basic;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +48,26 @@ public class BasicController {
         model.addAttribute("userMap", map);
 
         return "basic/variable";
+    }
+
+    @GetMapping("/basic-objects")
+    public String basicObjects(Model model, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        session.setAttribute("sessionData", "Hello Session");
+
+        // 스프링 부트 3.0 부터는 타임리프의 `${#request}`, `${#response}`, `${#session}`, `${#servletContext}`를 지원하지 않는다
+        // 그래서 해당 객체(request, response, session)들을 직접 model에 담아 넘겨줘야 한다!
+        model.addAttribute("request", request);
+        model.addAttribute("response", response);
+        model.addAttribute("servletContext", request.getServletContext());
+        return "basic/basic-objects";
+    }
+
+    @Component("helloBean")
+    static class HelloBean {
+
+        public String hello(String data) {
+            return "Hello " + data;
+        }
     }
 
     @Data
