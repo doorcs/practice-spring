@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>URL 링크</h1>
+<ul>
+    <!-- 단순 URL은 `@{URL}` 처럼 쓰면 됨 -->
+    <li><a th:href="@{/hello}">basic url</a></li>
+    <!-- Query Parameter를 사용하려면 `@{URL(param1={value1}, param2=${value2})}` 형태로 쓰면 됨 -->
+    <li><a th:href="@{/hello(param1=${param1}, param2=${param2})}">hello query param</a></li>
+    <!-- Path Variable을 사용하려면 `@{URL/{param1}/{param2}(param1={value1}, param2={value2})}` 형태로 쓰면 됨 -->
+    <li><a th:href="@{/hello/{param1}/{param2}(param1=${param1}, param2=${param2})}">path variable</a></li>
+    <!-- 섞어서 쓸 수도 있다! (Path Variable에 지정되지 않은 건 자동으로 Query Parameter 취급) -->
+    <li><a th:href="@{/hello/{param1}(param1=${param1}, param2=${param2})}">path variable + query parameter</a></li>
+</ul>
+</body>
+</html>
