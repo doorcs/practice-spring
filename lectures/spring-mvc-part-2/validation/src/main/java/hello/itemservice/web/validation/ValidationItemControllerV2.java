@@ -194,6 +194,8 @@ public class ValidationItemControllerV2 {
         if (!StringUtils.hasText(item.getItemName())) {
             bindingResult.rejectValue("itemName", "required");
         }
+        // 공백, 빈 문자 처리처럼 간단한 검증은 스프링에서 제공하는 `ValidationUtils`를 사용할 수도 있음! (아래 주석은 위 if문과 동일하게 동작함)
+        // ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "itemName", "required.itemName");
         if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1_000_000) {
             bindingResult.rejectValue("price", "range", new Object[] {1000, 1000000}, null);
         }
