@@ -2,9 +2,11 @@ package hello.jdbc.repository;
 
 import hello.jdbc.domain.Member;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Slf4j
 class MemberRepositoryV0Test {
@@ -15,7 +17,7 @@ class MemberRepositoryV0Test {
     void crud() throws SQLException {
 
         // save
-        Member member = new Member("memberV3", 10000);
+        Member member = new Member("memberV0", 10000);
         repository.save(member);
 
         // findById
@@ -25,5 +27,14 @@ class MemberRepositoryV0Test {
         log.info("member equals findMember = {}", member.equals(findMember)); // true
         // 참조값이 다른데도 equals를 하면 true가 나오는 이유? `Lombok` `@Data`가 `equals()`와 `hashCode()`를 자동으로 만들어주기 때문!!
         assertThat(findMember).isEqualTo(member);
+
+        // update
+        repository.update(member.getMemberId(), 20000);
+        Member updatedMember = repository.findById(member.getMemberId());
+        assertThat(updatedMember.getMoney()).isEqualTo(20000);
+
+        // delete
+        repository.delete(member.getMemberId());
+        assertThatThrownBy(() -> repository.findById(member.getMemberId())).isInstanceOf(NoSuchElementException.class);
     }
 }
